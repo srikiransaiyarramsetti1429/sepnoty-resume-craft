@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Plus, Trash2, ExternalLink, Github } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import { ResumeData, Project } from "@/types/resume";
+import { useState } from "react";
 
 interface ProjectsFormProps {
   data: ResumeData;
@@ -13,6 +15,8 @@ interface ProjectsFormProps {
 }
 
 const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, updateData }) => {
+  const [newTech, setNewTech] = useState<{[key: string]: string}>({});
+
   const addProject = () => {
     const newProject: Project = {
       id: Date.now().toString(),
@@ -45,9 +49,29 @@ const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, updateData }) => {
     });
   };
 
-  const updateTechnologies = (id: string, techString: string) => {
-    const technologies = techString.split(',').map(tech => tech.trim()).filter(tech => tech);
-    updateProject(id, 'technologies', technologies);
+  const addTechnology = (projectId: string) => {
+    const tech = newTech[projectId]?.trim();
+    if (tech) {
+      const project = data.projects.find((p) => p.id === projectId);
+      if (project && !project.technologies.includes(tech)) {
+        updateProject(projectId, 'technologies', [...project.technologies, tech]);
+        setNewTech({ ...newTech, [projectId]: '' });
+      }
+    }
+  };
+
+  const removeTechnology = (projectId: string, techToRemove: string) => {
+    const project = data.projects.find((p) => p.id === projectId);
+    if (project) {
+      updateProject(projectId, 'technologies', project.technologies.filter((tech) => tech !== techToRemove));
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent, projectId: string) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTechnology(projectId);
+    }
   };
 
   return (
@@ -66,65 +90,89 @@ const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, updateData }) => {
             </Button>
           </div>
 
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="space-y-2">
-              <Label htmlFor={`name-${project.id}`}>Project Name *</Label>
+              <Label htmlFor={`projectName-${project.id}`}>Project Name *</Label>
               <Input
-                id={`name-${project.id}`}
+                id={`projectName-${project.id}`}
                 value={project.name}
                 onChange={(e) => updateProject(project.id, 'name', e.target.value)}
-                placeholder="E-commerce Website"
+                placeholder="E-commerce Web Application"
               />
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor={`description-${project.id}`}>Description *</Label>
-              <Textarea
-                id={`description-${project.id}`}
-                value={project.description}
-                onChange={(e) => updateProject(project.id, 'description', e.target.value)}
-                placeholder="Built a full-stack e-commerce platform with user authentication, payment processing, and admin dashboard..."
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor={`technologies-${project.id}`}>Technologies Used</Label>
+              <Label htmlFor={`projectUrl-${project.id}`}>Live URL</Label>
               <Input
-                id={`technologies-${project.id}`}
-                value={project.technologies.join(', ')}
-                onChange={(e) => updateTechnologies(project.id, e.target.value)}
-                placeholder="React, Node.js, MongoDB, Stripe"
+                id={`projectUrl-${project.id}`}
+                value={project.url || ''}
+                onChange={(e) => updateProject(project.id, 'url', e.target.value)}
+                placeholder="https://myproject.com"
               />
-              <p className="text-sm text-gray-600">Separate technologies with commas</p>
+            </div>
+          </div>
+
+          <div className="mb-4 space-y-2">
+            <Label htmlFor={`projectGithub-${project.id}`}>GitHub Repository</Label>
+            <Input
+              id={`projectGithub-${project.id}`}
+              value={project.github || ''}
+              onChange={(e) => updateProject(project.id, 'github', e.target.value)}
+              placeholder="https://github.com/username/project"
+            />
+          </div>
+
+          <div className="mb-4 space-y-2">
+            <Label htmlFor={`projectDescription-${project.id}`}>Description *</Label>
+            <Textarea
+              id={`projectDescription-${project.id}`}
+              value={project.description}
+              onChange={(e) => updateProject(project.id, 'description', e.target.value)}
+              placeholder="Built a full-stack e-commerce platform with user authentication, payment processing, and admin dashboard. Implemented responsive design and optimized for performance."
+              rows={3}
+              className="resize-none"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Technologies Used</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={newTech[project.id] || ''}
+                  onChange={(e) => setNewTech({ ...newTech, [project.id]: e.target.value })}
+                  onKeyPress={(e) => handleKeyPress(e, project.id)}
+                  placeholder="React, Node.js, MongoDB"
+                />
+                <Button
+                  type="button"
+                  onClick={() => addTechnology(project.id)}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor={`url-${project.id}`}>
-                  <ExternalLink className="inline h-4 w-4 mr-1" />
-                  Live Demo URL
-                </Label>
-                <Input
-                  id={`url-${project.id}`}
-                  value={project.url || ''}
-                  onChange={(e) => updateProject(project.id, 'url', e.target.value)}
-                  placeholder="https://myproject.com"
-                />
+            {project.technologies.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {project.technologies.map((tech, index) => (
+                  <Badge
+                    key={index}
+                    variant="secondary"
+                    className="px-3 py-1 bg-primary/10 text-primary hover:bg-primary/20"
+                  >
+                    {tech}
+                    <button
+                      type="button"
+                      onClick={() => removeTechnology(project.id, tech)}
+                      className="ml-2 hover:text-red-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor={`github-${project.id}`}>
-                  <Github className="inline h-4 w-4 mr-1" />
-                  GitHub Repository
-                </Label>
-                <Input
-                  id={`github-${project.id}`}
-                  value={project.github || ''}
-                  onChange={(e) => updateProject(project.id, 'github', e.target.value)}
-                  placeholder="https://github.com/username/project"
-                />
-              </div>
-            </div>
+            )}
           </div>
         </Card>
       ))}
@@ -138,6 +186,16 @@ const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, updateData }) => {
         <Plus className="mr-2 h-4 w-4" />
         Add Project
       </Button>
+
+      <div className="bg-blue-50 p-4 rounded-lg">
+        <h4 className="font-medium text-blue-900 mb-2">💡 Pro Tips</h4>
+        <ul className="text-sm text-blue-800 space-y-1">
+          <li>• Include both personal and professional projects</li>
+          <li>• Focus on projects relevant to your target role</li>
+          <li>• Mention the problem your project solved</li>
+          <li>• Include links to live demos and source code when possible</li>
+        </ul>
+      </div>
     </div>
   );
 };

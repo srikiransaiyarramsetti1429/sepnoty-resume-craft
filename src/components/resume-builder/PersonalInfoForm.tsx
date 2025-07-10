@@ -10,7 +10,7 @@ interface PersonalInfoFormProps {
 }
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, updateData }) => {
-  const handleChange = (field: string, value: string) => {
+  const updatePersonalInfo = (field: string, value: string) => {
     updateData({
       ...data,
       personalInfo: {
@@ -20,7 +20,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, updateData })
     });
   };
 
-  const handleSummaryChange = (value: string) => {
+  const updateSummary = (value: string) => {
     updateData({
       ...data,
       summary: value,
@@ -35,9 +35,8 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, updateData })
           <Input
             id="fullName"
             value={data.personalInfo.fullName}
-            onChange={(e) => handleChange('fullName', e.target.value)}
+            onChange={(e) => updatePersonalInfo('fullName', e.target.value)}
             placeholder="John Doe"
-            required
           />
         </div>
         <div className="space-y-2">
@@ -46,22 +45,17 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, updateData })
             id="email"
             type="email"
             value={data.personalInfo.email}
-            onChange={(e) => handleChange('email', e.target.value)}
-            placeholder="john.doe@email.com"
-            required
+            onChange={(e) => updatePersonalInfo('email', e.target.value)}
+            placeholder="john@example.com"
           />
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="phone">Phone *</Label>
           <Input
             id="phone"
             value={data.personalInfo.phone}
-            onChange={(e) => handleChange('phone', e.target.value)}
+            onChange={(e) => updatePersonalInfo('phone', e.target.value)}
             placeholder="+1 (555) 123-4567"
-            required
           />
         </div>
         <div className="space-y-2">
@@ -69,20 +63,19 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, updateData })
           <Input
             id="location"
             value={data.personalInfo.location}
-            onChange={(e) => handleChange('location', e.target.value)}
+            onChange={(e) => updatePersonalInfo('location', e.target.value)}
             placeholder="New York, NY"
-            required
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="linkedin">LinkedIn</Label>
           <Input
             id="linkedin"
             value={data.personalInfo.linkedin || ''}
-            onChange={(e) => handleChange('linkedin', e.target.value)}
+            onChange={(e) => updatePersonalInfo('linkedin', e.target.value)}
             placeholder="linkedin.com/in/johndoe"
           />
         </div>
@@ -91,19 +84,20 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, updateData })
           <Input
             id="github"
             value={data.personalInfo.github || ''}
-            onChange={(e) => handleChange('github', e.target.value)}
+            onChange={(e) => updatePersonalInfo('github', e.target.value)}
             placeholder="github.com/johndoe"
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="website">Website</Label>
-          <Input
-            id="website"
-            value={data.personalInfo.website || ''}
-            onChange={(e) => handleChange('website', e.target.value)}
-            placeholder="johndoe.com"
-          />
-        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="website">Website</Label>
+        <Input
+          id="website"
+          value={data.personalInfo.website || ''}
+          onChange={(e) => updatePersonalInfo('website', e.target.value)}
+          placeholder="www.johndoe.com"
+        />
       </div>
 
       <div className="space-y-2">
@@ -111,13 +105,21 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, updateData })
         <Textarea
           id="summary"
           value={data.summary}
-          onChange={(e) => handleSummaryChange(e.target.value)}
-          placeholder="A brief summary of your professional background and key achievements..."
+          onChange={(e) => updateSummary(e.target.value)}
+          placeholder="Write a brief professional summary highlighting your key strengths and career objectives..."
           rows={4}
+          className="resize-none"
         />
-        <p className="text-sm text-gray-600">
-          2-3 sentences highlighting your experience and career goals.
-        </p>
+      </div>
+
+      <div className="bg-blue-50 p-4 rounded-lg">
+        <h4 className="font-medium text-blue-900 mb-2">💡 Pro Tips</h4>
+        <ul className="text-sm text-blue-800 space-y-1">
+          <li>• Use a professional email address</li>
+          <li>• Include city and state in your location</li>
+          <li>• Keep your summary concise (2-3 sentences)</li>
+          <li>• Highlight your most relevant skills and experience</li>
+        </ul>
       </div>
     </div>
   );

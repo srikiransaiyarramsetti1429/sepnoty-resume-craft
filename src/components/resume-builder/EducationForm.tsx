@@ -37,7 +37,7 @@ const EducationForm: React.FC<EducationFormProps> = ({ data, updateData }) => {
     });
   };
 
-  const updateEducation = (id: string, field: string, value: string) => {
+  const updateEducation = (id: string, field: string, value: any) => {
     updateData({
       ...data,
       education: data.education.map((edu) =>
@@ -51,7 +51,7 @@ const EducationForm: React.FC<EducationFormProps> = ({ data, updateData }) => {
       {data.education.map((education) => (
         <Card key={education.id} className="p-4 border-2 border-gray-200">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium">Education Entry</h3>
+            <h3 className="text-lg font-medium">Education</h3>
             <Button
               variant="outline"
               size="sm"
@@ -100,7 +100,7 @@ const EducationForm: React.FC<EducationFormProps> = ({ data, updateData }) => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor={`startDate-${education.id}`}>Start Date</Label>
+              <Label htmlFor={`startDate-${education.id}`}>Start Date *</Label>
               <Input
                 id={`startDate-${education.id}`}
                 type="month"
@@ -109,7 +109,7 @@ const EducationForm: React.FC<EducationFormProps> = ({ data, updateData }) => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor={`endDate-${education.id}`}>End Date</Label>
+              <Label htmlFor={`endDate-${education.id}`}>End Date *</Label>
               <Input
                 id={`endDate-${education.id}`}
                 type="month"
@@ -117,6 +117,16 @@ const EducationForm: React.FC<EducationFormProps> = ({ data, updateData }) => {
                 onChange={(e) => updateEducation(education.id, 'endDate', e.target.value)}
               />
             </div>
+          </div>
+
+          <div className="mt-4 space-y-2">
+            <Label htmlFor={`honors-${education.id}`}>Honors & Awards</Label>
+            <Input
+              id={`honors-${education.id}`}
+              value={education.honors || ''}
+              onChange={(e) => updateEducation(education.id, 'honors', e.target.value)}
+              placeholder="Magna Cum Laude, Dean's List"
+            />
           </div>
         </Card>
       ))}

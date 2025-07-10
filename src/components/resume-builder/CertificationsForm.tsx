@@ -35,7 +35,7 @@ const CertificationsForm: React.FC<CertificationsFormProps> = ({ data, updateDat
     });
   };
 
-  const updateCertification = (id: string, field: string, value: string) => {
+  const updateCertification = (id: string, field: string, value: any) => {
     updateData({
       ...data,
       certifications: data.certifications.map((cert) =>
@@ -62,50 +62,51 @@ const CertificationsForm: React.FC<CertificationsFormProps> = ({ data, updateDat
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor={`name-${certification.id}`}>Certification Name *</Label>
+              <Label htmlFor={`certName-${certification.id}`}>Certification Name *</Label>
               <Input
-                id={`name-${certification.id}`}
+                id={`certName-${certification.id}`}
                 value={certification.name}
                 onChange={(e) => updateCertification(certification.id, 'name', e.target.value)}
                 placeholder="AWS Certified Solutions Architect"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor={`issuer-${certification.id}`}>Issuing Organization *</Label>
+              <Label htmlFor={`certIssuer-${certification.id}`}>Issuing Organization *</Label>
               <Input
-                id={`issuer-${certification.id}`}
+                id={`certIssuer-${certification.id}`}
                 value={certification.issuer}
                 onChange={(e) => updateCertification(certification.id, 'issuer', e.target.value)}
                 placeholder="Amazon Web Services"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor={`date-${certification.id}`}>Issue Date</Label>
+              <Label htmlFor={`certDate-${certification.id}`}>Issue Date *</Label>
               <Input
-                id={`date-${certification.id}`}
+                id={`certDate-${certification.id}`}
                 type="month"
                 value={certification.date}
                 onChange={(e) => updateCertification(certification.id, 'date', e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor={`expiryDate-${certification.id}`}>Expiry Date</Label>
+              <Label htmlFor={`certExpiry-${certification.id}`}>Expiry Date</Label>
               <Input
-                id={`expiryDate-${certification.id}`}
+                id={`certExpiry-${certification.id}`}
                 type="month"
                 value={certification.expiryDate || ''}
                 onChange={(e) => updateCertification(certification.id, 'expiryDate', e.target.value)}
               />
             </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor={`credentialId-${certification.id}`}>Credential ID</Label>
-              <Input
-                id={`credentialId-${certification.id}`}
-                value={certification.credentialId || ''}
-                onChange={(e) => updateCertification(certification.id, 'credentialId', e.target.value)}
-                placeholder="ABC123XYZ789"
-              />
-            </div>
+          </div>
+
+          <div className="mt-4 space-y-2">
+            <Label htmlFor={`certCredential-${certification.id}`}>Credential ID</Label>
+            <Input
+              id={`certCredential-${certification.id}`}
+              value={certification.credentialId || ''}
+              onChange={(e) => updateCertification(certification.id, 'credentialId', e.target.value)}
+              placeholder="ABC123DEF456"
+            />
           </div>
         </Card>
       ))}
