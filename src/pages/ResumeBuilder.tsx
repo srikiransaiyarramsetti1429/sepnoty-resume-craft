@@ -76,6 +76,26 @@ const ResumeBuilder = () => {
 
   const CurrentStepComponent = currentStepData.component;
 
+  const renderCurrentStep = () => {
+    if (currentStepData.id === 'template') {
+      return (
+        <TemplateSelector
+          data={resumeData}
+          updateData={setResumeData}
+          selectedTemplate={selectedTemplate}
+          setSelectedTemplate={setSelectedTemplate}
+        />
+      );
+    }
+    
+    return (
+      <CurrentStepComponent
+        data={resumeData}
+        updateData={setResumeData}
+      />
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -134,12 +154,7 @@ const ResumeBuilder = () => {
           <div className="space-y-6">
             <Card className="p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">{currentStepData.title}</h2>
-              <CurrentStepComponent
-                data={resumeData}
-                updateData={setResumeData}
-                selectedTemplate={selectedTemplate}
-                setSelectedTemplate={setSelectedTemplate}
-              />
+              {renderCurrentStep()}
             </Card>
 
             {/* Navigation */}
