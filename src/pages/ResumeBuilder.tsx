@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight, Download, FileText, Home } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, FileText, Home, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ResumeData, ResumeTemplate } from "@/types/resume";
 import PersonalInfoForm from "@/components/resume-builder/PersonalInfoForm";
@@ -66,6 +66,31 @@ const ResumeBuilder = () => {
     }
   };
 
+  const handleStartOver = () => {
+    setCurrentStep(0);
+    setSelectedTemplate('modern');
+    setResumeData({
+      personalInfo: {
+        fullName: '',
+        email: '',
+        phone: '',
+        location: '',
+        linkedin: '',
+        github: '',
+        website: '',
+      },
+      summary: '',
+      education: [],
+      experience: [],
+      skills: [],
+      projects: [],
+      certifications: [],
+      languages: [],
+    });
+    navigate('/');
+    toast.success("Resume builder has been reset!");
+  };
+
   const handleDownloadPDF = () => {
     toast.success("PDF download started! This is a demo - in production this would generate a real PDF.");
   };
@@ -99,13 +124,13 @@ const ResumeBuilder = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white shadow-sm border-b animate-fade-in">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Button
               variant="ghost"
               onClick={() => navigate('/')}
-              className="text-gray-600 hover:text-primary"
+              className="text-gray-600 hover:text-primary transition-colors duration-300"
             >
               <Home className="mr-2 h-4 w-4" />
               Back to Home
@@ -118,7 +143,7 @@ const ResumeBuilder = () => {
               <Button
                 variant="outline"
                 onClick={handleDownloadPDF}
-                className="text-primary border-primary hover:bg-primary hover:text-white"
+                className="text-primary border-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105"
               >
                 <Download className="mr-2 h-4 w-4" />
                 PDF
@@ -126,10 +151,18 @@ const ResumeBuilder = () => {
               <Button
                 variant="outline"
                 onClick={handleDownloadDOCX}
-                className="text-accent border-accent hover:bg-accent hover:text-white"
+                className="text-accent border-accent hover:bg-accent hover:text-white transition-all duration-300 hover:scale-105"
               >
                 <FileText className="mr-2 h-4 w-4" />
                 DOCX
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleStartOver}
+                className="text-red-600 border-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-105"
+              >
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Start Over
               </Button>
             </div>
           </div>
@@ -137,33 +170,35 @@ const ResumeBuilder = () => {
       </div>
 
       {/* Progress Bar */}
-      <div className="bg-white border-b">
+      <div className="bg-white border-b animate-fade-in [animation-delay:200ms]">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">{currentStepData.title}</span>
             <span className="text-sm text-gray-500">{Math.round(progress)}% Complete</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} className="h-3 transition-all duration-500" />
         </div>
       </div>
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* Form Section */}
-          <div className="space-y-6">
-            <Card className="p-6">
+          <div className="space-y-6 animate-fade-in [animation-delay:400ms]">
+            <Card className="p-6 transform transition-all duration-500 hover:shadow-lg">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">{currentStepData.title}</h2>
-              {renderCurrentStep()}
+              <div className="animate-fade-in [animation-delay:600ms]">
+                {renderCurrentStep()}
+              </div>
             </Card>
 
             {/* Navigation */}
-            <div className="flex justify-between">
+            <div className="flex justify-between animate-fade-in [animation-delay:800ms]">
               <Button
                 variant="outline"
                 onClick={handlePrevious}
                 disabled={currentStep === 0}
-                className="flex items-center"
+                className="flex items-center transition-all duration-300 hover:scale-105 disabled:hover:scale-100"
               >
                 <ChevronLeft className="mr-2 h-4 w-4" />
                 Previous
@@ -171,7 +206,7 @@ const ResumeBuilder = () => {
               <Button
                 onClick={handleNext}
                 disabled={currentStep === steps.length - 1}
-                className="bg-primary hover:bg-primary/90 text-white flex items-center"
+                className="bg-primary hover:bg-primary/90 text-white flex items-center transition-all duration-300 hover:scale-105 disabled:hover:scale-100"
               >
                 Next
                 <ChevronRight className="ml-2 h-4 w-4" />
@@ -180,10 +215,12 @@ const ResumeBuilder = () => {
           </div>
 
           {/* Preview Section */}
-          <div className="lg:sticky lg:top-8">
-            <Card className="p-6">
+          <div className="xl:sticky xl:top-8 animate-fade-in [animation-delay:500ms]">
+            <Card className="p-6 transform transition-all duration-500 hover:shadow-lg">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Preview</h3>
-              <ResumePreview data={resumeData} template={selectedTemplate} />
+              <div className="animate-fade-in [animation-delay:700ms]">
+                <ResumePreview data={resumeData} template={selectedTemplate} />
+              </div>
             </Card>
           </div>
         </div>

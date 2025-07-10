@@ -13,7 +13,8 @@ import {
   TrendingUp, 
   Download,
   Home,
-  Sparkles
+  Sparkles,
+  RotateCcw
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ResumeAnalysis } from "@/types/resume";
@@ -105,37 +106,52 @@ const ResumeChecker = () => {
     toast.success("Improved resume download started! This is a demo - in production this would generate an enhanced PDF/DOCX file.");
   };
 
+  const handleStartOver = () => {
+    setResumeText('');
+    setJobDescription('');
+    setAnalysis(null);
+    navigate('/');
+    toast.success("Resume checker has been reset!");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white shadow-sm border-b animate-fade-in">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Button
               variant="ghost"
               onClick={() => navigate('/')}
-              className="text-gray-600 hover:text-primary"
+              className="text-gray-600 hover:text-primary transition-colors duration-300"
             >
               <Home className="mr-2 h-4 w-4" />
               Back to Home
             </Button>
             <h1 className="text-2xl font-bold text-gray-900">AI Resume Checker</h1>
-            <div className="w-24"></div> {/* Spacer for center alignment */}
+            <Button
+              variant="outline"
+              onClick={handleStartOver}
+              className="text-red-600 border-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-105"
+            >
+              <RotateCcw className="mr-2 h-4 w-4" />
+              Start Over
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="space-y-6">
-            <Card className="p-6">
+          <div className="space-y-6 animate-fade-in [animation-delay:200ms]">
+            <Card className="p-6 transform transition-all duration-500 hover:shadow-lg">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Upload Your Resume</h2>
               
               {/* File Upload */}
               <div className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-all duration-300 hover:bg-gray-50">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4 animate-bounce" />
                   <p className="text-gray-600 mb-4">Upload your resume (PDF or DOCX)</p>
                   <input
                     type="file"
@@ -145,7 +161,7 @@ const ResumeChecker = () => {
                     id="file-upload"
                   />
                   <label htmlFor="file-upload">
-                    <Button variant="outline" className="cursor-pointer">
+                    <Button variant="outline" className="cursor-pointer hover:scale-105 transition-transform duration-300">
                       <FileText className="mr-2 h-4 w-4" />
                       Choose File
                     </Button>
@@ -166,13 +182,13 @@ const ResumeChecker = () => {
                     onChange={(e) => setResumeText(e.target.value)}
                     placeholder="Paste your resume content here..."
                     rows={8}
-                    className="resize-none"
+                    className="resize-none transition-all duration-300 focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </div>
             </Card>
 
-            <Card className="p-6">
+            <Card className="p-6 transform transition-all duration-500 hover:shadow-lg animate-fade-in [animation-delay:400ms]">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Job Description (Optional)
               </h3>
@@ -182,7 +198,7 @@ const ResumeChecker = () => {
                   onChange={(e) => setJobDescription(e.target.value)}
                   placeholder="Paste the job description here for better keyword analysis..."
                   rows={6}
-                  className="resize-none"
+                  className="resize-none transition-all duration-300 focus:ring-2 focus:ring-primary"
                 />
                 <p className="text-sm text-gray-600">
                   Adding a job description helps us provide more targeted feedback.
@@ -193,7 +209,7 @@ const ResumeChecker = () => {
             <Button
               onClick={analyzeResume}
               disabled={isAnalyzing}
-              className="w-full bg-primary hover:bg-primary/90 text-white py-3 text-lg"
+              className="w-full bg-primary hover:bg-primary/90 text-white py-3 text-lg transition-all duration-300 hover:scale-105 disabled:hover:scale-100 animate-fade-in [animation-delay:600ms]"
             >
               {isAnalyzing ? (
                 <>
@@ -213,7 +229,7 @@ const ResumeChecker = () => {
           <div className="space-y-6">
             {analysis ? (
               <>
-                <Card className="p-6">
+                <Card className="p-6 animate-fade-in transform transition-all duration-700 hover:shadow-lg">
                   <h2 className="text-xl font-semibold text-gray-900 mb-6">Analysis Results</h2>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -224,7 +240,11 @@ const ResumeChecker = () => {
                       { label: 'Readability', score: analysis.readabilityScore },
                       { label: 'Formatting', score: analysis.formattingScore },
                     ].map((item, index) => (
-                      <div key={index} className={`p-4 rounded-lg ${getScoreBg(item.score)}`}>
+                      <div 
+                        key={index} 
+                        className={`p-4 rounded-lg ${getScoreBg(item.score)} transform transition-all duration-500 hover:scale-105 animate-fade-in`}
+                        style={{ animationDelay: `${index * 100}ms` }}
+                      >
                         <div className="flex justify-between items-center mb-2">
                           <span className="font-medium text-gray-900">{item.label}</span>
                           <span className={`font-bold text-lg ${getScoreColor(item.score)}`}>
@@ -236,10 +256,10 @@ const ResumeChecker = () => {
                     ))}
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 animate-fade-in [animation-delay:600ms]">
                     <Button
                       onClick={applyAIFix}
-                      className="flex-1 bg-accent hover:bg-accent/90 text-white"
+                      className="flex-1 bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 animate-pulse"
                     >
                       <Sparkles className="mr-2 h-4 w-4" />
                       Apply AI Fixes
@@ -247,7 +267,7 @@ const ResumeChecker = () => {
                     <Button
                       onClick={downloadImprovedResume}
                       variant="outline"
-                      className="flex-1 border-primary text-primary hover:bg-primary hover:text-white"
+                      className="flex-1 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105"
                     >
                       <Download className="mr-2 h-4 w-4" />
                       Download
@@ -255,13 +275,18 @@ const ResumeChecker = () => {
                   </div>
                 </Card>
 
-                <Card className="p-6">
+                <Card className="p-6 animate-fade-in transform transition-all duration-700 hover:shadow-lg [animation-delay:200ms]">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     Missing Keywords
                   </h3>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {analysis.missingKeywords.map((keyword, index) => (
-                      <Badge key={index} variant="outline" className="text-red-600 border-red-600">
+                      <Badge 
+                        key={index} 
+                        variant="outline" 
+                        className="text-red-600 border-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-105 animate-fade-in"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
                         {keyword}
                       </Badge>
                     ))}
@@ -271,13 +296,17 @@ const ResumeChecker = () => {
                   </p>
                 </Card>
 
-                <Card className="p-6">
+                <Card className="p-6 animate-fade-in transform transition-all duration-700 hover:shadow-lg [animation-delay:400ms]">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     AI Suggestions
                   </h3>
                   <div className="space-y-3">
                     {analysis.suggestions.map((suggestion, index) => (
-                      <div key={index} className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                      <div 
+                        key={index} 
+                        className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-all duration-300 hover:scale-[1.02] animate-fade-in"
+                        style={{ animationDelay: `${index * 100}ms` }}
+                      >
                         <TrendingUp className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                         <p className="text-sm text-blue-900">{suggestion}</p>
                       </div>
@@ -285,13 +314,17 @@ const ResumeChecker = () => {
                   </div>
                 </Card>
 
-                <Card className="p-6">
+                <Card className="p-6 animate-fade-in transform transition-all duration-700 hover:shadow-lg [animation-delay:600ms]">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     Issues Found
                   </h3>
                   <div className="space-y-3">
                     {analysis.issues.map((issue, index) => (
-                      <div key={index} className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
+                      <div 
+                        key={index} 
+                        className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-all duration-300 hover:scale-[1.02] animate-fade-in"
+                        style={{ animationDelay: `${index * 100}ms` }}
+                      >
                         <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="text-sm font-medium text-yellow-900">{issue.message}</p>
@@ -303,8 +336,8 @@ const ResumeChecker = () => {
                 </Card>
               </>
             ) : (
-              <Card className="p-8 text-center">
-                <CheckCircle className="mx-auto h-16 w-16 text-gray-400 mb-4" />
+              <Card className="p-8 text-center animate-fade-in transform transition-all duration-500 hover:shadow-lg">
+                <CheckCircle className="mx-auto h-16 w-16 text-gray-400 mb-4 animate-bounce" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   Ready to Analyze
                 </h3>
