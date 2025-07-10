@@ -1,37 +1,27 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Bot, FileCheck, FileText, Sparkles, Download, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 const Index = () => {
   const navigate = useNavigate();
-
-  const features = [
-    {
-      icon: Bot,
-      title: "GPT-4o Resume Optimization",
-      description: "Get intelligent suggestions for bullet points, phrasing, and professional language using advanced AI."
-    },
-    {
-      icon: FileCheck,
-      title: "ATS Keyword Analysis",
-      description: "Ensure your resume passes through Applicant Tracking Systems with our scoring algorithm."
-    },
-    {
-      icon: Sparkles,
-      title: "Layout & Formatting Checker",
-      description: "Receive instant feedback and improvements as you build your resume."
-    },
-    {
-      icon: FileText,
-      title: "Grammar & Readability Engine",
-      description: "Choose from professional, ATS-compatible templates designed for modern job markets."
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50">
+  const features = [{
+    icon: Bot,
+    title: "GPT-4o Resume Optimization",
+    description: "Get intelligent suggestions for bullet points, phrasing, and professional language using advanced AI."
+  }, {
+    icon: FileCheck,
+    title: "ATS Keyword Analysis",
+    description: "Ensure your resume passes through Applicant Tracking Systems with our scoring algorithm."
+  }, {
+    icon: Sparkles,
+    title: "Layout & Formatting Checker",
+    description: "Receive instant feedback and improvements as you build your resume."
+  }, {
+    icon: FileText,
+    title: "Grammar & Readability Engine",
+    description: "Choose from professional, ATS-compatible templates designed for modern job markets."
+  }];
+  return <div className="min-h-screen bg-gradient-to-br from-white to-gray-50">
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="text-center">
@@ -44,20 +34,11 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-fade-in [animation-delay:400ms]">
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              onClick={() => navigate('/resume-builder')}
-            >
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105" onClick={() => navigate('/resume-builder')}>
               <FileText className="mr-2 h-5 w-5" />
               Start Resume Builder
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-2 border-accent text-accent hover:bg-accent hover:text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              onClick={() => navigate('/resume-checker')}
-            >
+            <Button size="lg" variant="outline" className="border-2 border-accent text-accent hover:bg-accent hover:text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105" onClick={() => navigate('/resume-checker')}>
               <FileCheck className="mr-2 h-5 w-5" />
               Check My Resume
             </Button>
@@ -102,28 +83,17 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-fade-in [animation-delay:400ms]">
-            <Button
-              size="lg"
-              className="bg-white text-primary hover:bg-gray-100 px-8 py-6 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              onClick={() => navigate('/resume-builder')}
-            >
+            <Button size="lg" onClick={() => navigate('/resume-builder')} className="bg-white hover:bg-gray-100 px-8 py-6 text-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold text-center text-gray-800">
               <Download className="mr-2 h-5 w-5" />
               Build Resume Now
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => navigate('/resume-checker')}
-              className="border-2 border-white hover:bg-white px-8 py-6 text-lg font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 text-slate-800 text-center"
-            >
+            <Button size="lg" variant="outline" onClick={() => navigate('/resume-checker')} className="border-2 border-white hover:bg-white px-8 py-6 text-lg font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 text-slate-800 text-center">
               <RotateCcw className="mr-2 h-5 w-5" />
               Check Existing Resume
             </Button>
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
